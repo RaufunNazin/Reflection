@@ -34,7 +34,10 @@ const Search = () => {
         <div className="text-center text-brand">
           Search results for &apos;<strong>{searchText}</strong>&apos;
         </div>
-        {products.slice(0, 5).map((product) => (
+        {products.length === 0 && <div className="text-center text-brand">
+          Sorry, No Results found.
+        </div>}
+        {products.map((product) => (
           <div
             key={product.id}
             onClick={() => navigate(`/product/${product.id}`)}
@@ -61,7 +64,7 @@ const Search = () => {
               <div className="grid grid-cols-4">
                 {Object.entries(
                   JSON.parse(product.features.replace(/'/g, '"'))
-                ).map(([key, value]) => (
+                ).filter(([key]) => key !== "image").map(([key, value]) => (
                   <li key={key}>
                     <strong>{key.split("_").join(" ")}:</strong> {value}
                   </li>
