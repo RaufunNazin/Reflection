@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../api";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import Rating from "react-rating";
 import { IoMdStar, IoMdStarOutline } from "react-icons/io";
 
 const SingleProduct = () => {
-  const navigate = useNavigate();
   const { productId } = useParams();
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
@@ -42,7 +41,7 @@ const SingleProduct = () => {
         rating: updatedRating,
         body: commentBody,
       })
-      .then((res) => {
+      .then(() => {
         getComments();
         setCommentBody("");
         setRating({});
@@ -52,7 +51,7 @@ const SingleProduct = () => {
       });
   };
 
-  const getComments = () => {
+  const getComments = useCallback(() => {
     api
       .get(`/comments/${productId}`)
       .then((res) => {
@@ -61,7 +60,7 @@ const SingleProduct = () => {
       .catch((err) => {
         console.log(err);
       });
-  };
+  }, [productId]);
 
   useEffect(() => {
     const getProfile = () => {
@@ -100,7 +99,7 @@ const SingleProduct = () => {
     getCategories();
     getComments();
     getProfile();
-  }, [productId]);
+  }, [productId, getComments]);
   return (
     <div>
       <Navbar />

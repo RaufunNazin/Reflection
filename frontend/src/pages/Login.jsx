@@ -35,7 +35,7 @@ const Login = () => {
 
   useEffect(() => {
     if (state === "logout") toast.success("Logged out successfully");
-  }, []);
+  }, [state]);
 
   return (
     <div className="flex flex-1 w-full">

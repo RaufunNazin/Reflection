@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../api";
 import Footer from "../components/Footer";
@@ -10,26 +10,23 @@ const Search = () => {
   const { searchText } = useParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const getProducts = () => {
-    api
-      .get(`/products`)
-      .then((res) => {
-        const filteredProducts = res.data.filter((product) =>
-          product.name.toLowerCase().includes(searchText.toLowerCase())
-        );
-        setProducts(filteredProducts);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   useEffect(() => {
+    const getProducts = () => {
+      api
+        .get(`/products`)
+        .then((res) => {
+          const filteredProducts = res.data.filter((product) =>
+            product.name.toLowerCase().includes(searchText.toLowerCase())
+          );
+          setProducts(filteredProducts);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
     getProducts();
-  }, []);
+  }, [searchText]);
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />

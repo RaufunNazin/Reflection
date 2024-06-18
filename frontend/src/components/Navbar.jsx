@@ -18,7 +18,7 @@ const Navbar = () => {
   };
 
   const logout = () => {
-    api.get("/auth/logout").then((res) => {
+    api.get("/auth/logout").then(() => {
       navigate("/login", { state: "logout" });
     });
   };

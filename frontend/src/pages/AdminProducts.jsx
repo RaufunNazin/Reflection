@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
+import { useEffect, useState } from "react";
 import api from "../api";
 import AdminNavbar from "../components/AdminNavbar";
 import { Select } from "antd";
@@ -39,7 +38,7 @@ const AdminProducts = () => {
         desc: description,
         features: { ...features, image: image },
       })
-      .then((res) => {
+      .then(() => {
         toast.success("Product created successfully");
         setImage("");
         setName("");

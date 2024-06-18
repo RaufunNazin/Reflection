@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../api";
 import Rating from "react-rating";
@@ -9,14 +9,12 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const getProducts = () => {
     api
       .get("/products")
       .then((res) => {
         setProducts(res.data);
-        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
