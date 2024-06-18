@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 const Products = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const getCategories = () => {
@@ -29,6 +30,7 @@ const Products = () => {
       .get("/products")
       .then((res) => {
         setProducts(res.data);
+        setFilteredProducts(res.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -47,11 +49,12 @@ const Products = () => {
           <Select
             placeholder="Select Category"
             className="w-1/5 outline-brand"
-            onChange={(value) =>
-              setProducts(
-                products.filter((product) => product.category_id === value)
-              )
-            }
+            onChange={(value) => {
+              const filtered = products.filter(
+                (product) => product.category_id === value
+              );
+              setFilteredProducts(filtered);
+            }}
             options={categories.map((category) => ({
               label: category.name,
               value: category.id,
@@ -92,13 +95,13 @@ const Products = () => {
         </div>
         {loading ? (
           <div>Loading...</div>
-        ) : products.length === 0 ? (
+        ) : filteredProducts.length === 0 ? (
           <div className="text-center text-brand">
             Oops! No products found. Try a different filter.
           </div>
         ) : (
           <div className="grid grid-cols-4 gap-5">
-            {products.slice(0, 5).map((product) => (
+            {filteredProducts.slice(0, 5).map((product) => (
               <div
                 key={product.id}
                 className="flex flex-col gap-y-3 shadow-md p-2 bg-white rounded-md transition-all duration-200 hover:shadow-lg"

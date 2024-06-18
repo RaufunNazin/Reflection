@@ -81,13 +81,13 @@ const Home = () => {
               </div>
               <div className="text-[18px] text-xlightgray">{product.desc}</div>
               <div className="grid grid-cols-4">
-                {Object.entries(
-                  JSON.parse(product.features.replace(/'/g, '"'))
-                ).filter(([key]) => key !== "image").map(([key, value]) => (
-                  <li key={key}>
-                    <strong>{key.split("_").join(" ")}:</strong> {value}
-                  </li>
-                ))}
+                {Object.entries(JSON.parse(product.features.replace(/'/g, '"')))
+                  .filter(([key]) => key !== "image")
+                  .map(([key, value]) => (
+                    <li key={key}>
+                      <strong>{key.split("_").join(" ")}:</strong> {value}
+                    </li>
+                  ))}
               </div>
               <div className="flex items-center gap-x-2">
                 <Rating
