@@ -105,9 +105,12 @@ const Products = () => {
               >
                 <div>
                   <img
-                    src="/illustration.png"
+                    src={
+                      JSON.parse(product.features.replace(/'/g, '"')).image ||
+                      "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
+                    }
                     alt="product"
-                    className="w-full"
+                    className="h-60 object-contain"
                   />
                 </div>
                 <div>

@@ -9,6 +9,7 @@ import { IoMdStar, IoMdStarOutline } from "react-icons/io";
 const SingleProduct = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
+  const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState({});
   const [categories, setCategories] = useState([]);
@@ -63,6 +64,17 @@ const SingleProduct = () => {
   };
 
   useEffect(() => {
+    const getProfile = () => {
+      api
+        .get("/auth/me")
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
     const getCategories = () => {
       api
         .get("/category")
@@ -87,6 +99,7 @@ const SingleProduct = () => {
     getProduct();
     getCategories();
     getComments();
+    getProfile();
   }, [productId]);
   return (
     <div>
@@ -98,21 +111,24 @@ const SingleProduct = () => {
           </div>
           <div className="flex justify-center gap-x-10">
             <img
-              src={"/illustration.png"}
+              src={
+                JSON.parse(product.features.replace(/'/g, '"')).image ||
+                "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
+              }
               alt={product.name}
-              className="w-1/3 h-auto"
+              className="w-auto h-[520px]"
             />
             <div>
-              {Object.entries(
-                JSON.parse(product.features.replace(/'/g, '"'))
-              ).map(([key, value]) => (
-                <div key={key} className="flex flex-col">
-                  <div className="text-2xl font-bold">{value}</div>
-                  <div className="text-sm text-xlightgray">
-                    {key.split("_").join(" ")}
+              {Object.entries(JSON.parse(product.features.replace(/'/g, '"')))
+                .filter(([key]) => key !== "image")
+                .map(([key, value]) => (
+                  <div key={key} className="flex flex-col">
+                    <div className="text-2xl font-bold">{value}</div>
+                    <div className="text-sm text-xlightgray">
+                      {key.split("_").join(" ")}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
               <div className="mt-5 -ml-1">
                 <Rating
                   initialRating={product.rating}
@@ -125,12 +141,12 @@ const SingleProduct = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-between items-start">
-            <div className="text-lg text-center text-xlightgray font-light">
+          <div className="flex justify-between items-start gap-x-10">
+            <div className="text-lg text-left text-xlightgray font-light">
               {product.desc}
             </div>
-            <div className="text-[24px] text-center text-brand font-bold">
-              $ {product.price}
+            <div className="text-[24px]  text-center text-brand font-bold">
+              ${product.price}
             </div>
           </div>
           <div className="text-center text-brand">Rate this product</div>
@@ -176,7 +192,7 @@ const SingleProduct = () => {
               <div className="flex justify-between">
                 <div className="flex flex-col">
                   <div className="text-lg text-brand font-bold">
-                    {"comment.user_name"}
+                    {comment.user_id === user.id ? user.name : "Charlie Davis"}
                   </div>
                   <div className="text-lg text-xlightgray">{comment.body}</div>
                 </div>

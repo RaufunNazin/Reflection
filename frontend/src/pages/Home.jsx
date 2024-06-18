@@ -60,13 +60,16 @@ const Home = () => {
           <div
             key={product.id}
             onClick={() => navigate(`/product/${product.id}`)}
-            className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:gap-x-8 border-b border-gray-300 py-4 cursor-pointer hover:shadow-lg transition-all duration-200"
+            className="flex flex-col md:flex-row gap-y-4 md:gap-y-0 md:gap-x-8 border-b border-gray-300 p-4 cursor-pointer hover:shadow-lg transition-all duration-200"
           >
             <div className="flex justify-center">
               <img
-                src={"/illustration.png"}
+                src={
+                  JSON.parse(product.features.replace(/'/g, '"')).image ||
+                  "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
+                }
                 alt={product.name}
-                className="w-40 h-40 object-contain"
+                className="h-40 w-40 object-contain"
               />
             </div>
             <div className="flex flex-1 flex-col gap-y-2">
@@ -80,7 +83,7 @@ const Home = () => {
               <div className="grid grid-cols-4">
                 {Object.entries(
                   JSON.parse(product.features.replace(/'/g, '"'))
-                ).map(([key, value]) => (
+                ).filter(([key]) => key !== "image").map(([key, value]) => (
                   <li key={key}>
                     <strong>{key.split("_").join(" ")}:</strong> {value}
                   </li>

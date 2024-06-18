@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AdminProducts = () => {
+  const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
@@ -36,10 +37,11 @@ const AdminProducts = () => {
         category_id: parseInt(category),
         price: parseFloat(price),
         desc: description,
-        features: features,
+        features: { ...features, image: image },
       })
       .then((res) => {
         toast.success("Product created successfully");
+        setImage("");
         setName("");
         setCategory("");
         setPrice("");
@@ -70,8 +72,15 @@ const AdminProducts = () => {
         theme="colored"
       />
       <div className="flex flex-col gap-y-4 md:gap-y-8 md:w-2/3 md:mx-auto my-5 md:my-16 mx-2">
-        <div className="text-brand text-xl">Create Products</div>
+        <div className="text-brand text-xl">Create Product</div>
         <div className="grid grid-cols-2 gap-2 md:gap-5">
+          <input
+            type="text"
+            placeholder="Image URL"
+            className="border border-gray-300 rounded-md px-2 w-full outline-brand"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+          />
           <input
             type="text"
             placeholder="Product Name"
