@@ -12,7 +12,6 @@ const Sidebar = () => {
   const nav = useNavigate();
   let location = useLocation();
   const [modal2Open, setModal2Open] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOpen, setOpen] = useState(false);
 
   const to = (address) => {
@@ -22,11 +21,7 @@ const Sidebar = () => {
 
   const getProfile = () => {
     api
-      .get("/me", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .get("/auth/me")
       .then((res) => {
         setUser(res.data);
       })
@@ -36,18 +31,12 @@ const Sidebar = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    nav("/login");
-    setModal2Open(false);
+    api.get("/auth/logout").then((res) => {
+      nav("/login", { state: "logout" });
+    });
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
     getProfile();
   }, []);
 
@@ -67,28 +56,25 @@ const Sidebar = () => {
         onOpen={() => setOpen(!isOpen)}
         onClose={() => setOpen(!isOpen)}
       >
-        {user?.role === 1 && (
-          <div onClick={() => to("admin/photos")} className="menu-item">
+        {user?.is_admin === 1 && (
+          <div onClick={() => to("admin/products")} className="menu-item">
             Admin Panel
           </div>
         )}
-        <div onClick={() => to("gallery")} className="menu-item">
-          Gallery
+        <div onClick={() => to("products")} className="menu-item">
+          Products
         </div>
-        <div onClick={() => to("clients")} className="menu-item">
-          Clients
+        <div onClick={() => to("recommendations")} className="menu-item">
+          Recommendations
         </div>
-        {isLoggedIn ? (
-          <div onClick={() => to("profile")} className="menu-item">
-            Profile
-          </div>
-        ) : (
-          <div onClick={() => to("login")} className="menu-item">
-            Login
-          </div>
-        )}
 
-        {isLoggedIn && (
+        {!user?.name ? (
+          <li>
+            <div onClick={() => to("login")} className="menu-item">
+              Login
+            </div>
+          </li>
+        ) : (
           <li>
             <div
               onClick={() => {

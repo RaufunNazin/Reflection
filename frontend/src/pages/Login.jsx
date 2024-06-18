@@ -18,33 +18,28 @@ const Login = () => {
 
   const login = () => {
     api
-      .post("/login", {
-        username: email,
+      .post("/auth/login", {
+        email: email,
         password: password,
       })
       .then((res) => {
         if (res.status === 200) {
-          if (state === "booking") {
-            navigate("/booking");
-          }
           navigate("/", { state: "login" });
-          localStorage.setItem("token", res.data.access_token);
         }
       })
       .catch((err) => {
         console.log(err);
-        toast.error(err.response.data?.detail || err.message);
+        toast.error(err.response.data?.message || err.message);
       });
   };
 
   useEffect(() => {
     if (state === "logout") toast.success("Logged out successfully");
-    if (state === "booking") toast.error("Login to book a service");
   }, []);
 
   return (
     <div className="flex flex-1 w-full">
-      <div>
+      <div className="hidden md:block">
         <img src="/illustration.png" alt="hero" className="max-h-screen" />
       </div>
       <div className="flex flex-1 min-h-screen flex-col items-center justify-center gap-y-8">
@@ -60,6 +55,9 @@ const Login = () => {
           theme="colored"
         />
         <div className="flex flex-col items-center gap-y-2">
+          <button onClick={() => navigate("/")}>
+            <img src="/logo.svg" alt="logo" className="h-8" />
+          </button>
           <p className="text-3xl font-black text-xgray lg:text-4xl">
             Login to your account
           </p>

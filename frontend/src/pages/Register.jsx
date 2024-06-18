@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cPassword, setCPassword] = useState("");
@@ -23,27 +23,25 @@ const Register = () => {
       return;
     }
     api
-      .post("/register", {
-        username: username,
+      .post("/auth/register", {
+        name: name,
         email: email,
         password: password,
-        role: 2,
       })
       .then((res) => {
         if (res.status === 201) {
           navigate("/", { state: "register" });
-          localStorage.setItem("token", res.data.access_token);
         }
       })
       .catch((err) => {
         console.log(err);
-        toast.error(err.response.data?.detail || err.message);
+        toast.error(err.response.data?.message || err.message);
       });
   };
 
   return (
     <div className="flex flex-1 w-full">
-      <div>
+      <div className="hidden md:block">
         <img src="/illustration.png" alt="hero" className="max-h-screen" />
       </div>
       <div className="flex flex-1 min-h-screen flex-col items-center justify-center gap-y-8">
@@ -59,6 +57,9 @@ const Register = () => {
           theme="colored"
         />
         <div className="flex flex-col items-center gap-y-2">
+          <button onClick={() => navigate("/")}>
+            <img src="/logo.svg" alt="logo" className="h-8" />
+          </button>
           <p className="text-3xl font-black text-xgray lg:text-4xl">
             Create your account
           </p>
@@ -70,9 +71,9 @@ const Register = () => {
           <div className="flex flex-col gap-y-6">
             <input
               type="text"
-              placeholder="Username"
+              placeholder="Name"
               className="w-full rounded-md border border-[#DED2D9] px-2 py-3 focus:border-transparent focus:outline-none focus:ring-1 focus:ring-brand"
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               onKeyDown={handleKeyPress}
             />
             <input

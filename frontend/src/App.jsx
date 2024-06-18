@@ -5,12 +5,17 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import api from "./api";
 import Sidebar from "./components/Sidebar";
+import AdminProducts from "./pages/AdminProducts";
+import Products from "./pages/Products";
+import SingleProduct from "./pages/SingleProduct";
+import Recommendation from "./pages/Recommendation";
+import Search from "./pages/Search";
 
 const App = () => {
   useEffect(() => {
     const getProfile = () => {
       api
-        .get("/me", {
+        .get("/auth/me", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -34,6 +39,11 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/recommendations" element={<Recommendation />} />
+            <Route path="/search/:searchText" element={<Search />} />
+            <Route path="/product/:productId" element={<SingleProduct />} />
+            <Route path="/admin/products" element={<AdminProducts />} />
           </Routes>
         </BrowserRouter>
       </div>

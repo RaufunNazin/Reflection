@@ -67,7 +67,7 @@ async def login(request: LoginRequest):
         response.set_cookie('SESSION', session_token)
         return response
 
-@router.get("/me")
+@router.get("/auth/me")
 async def get_profile(user: User = Depends(get_user_from_session)):
     return user
 
@@ -177,10 +177,12 @@ async def register(request: RegisterRequest):
         db.commit()
 
         response = JSONResponse(
-            status_code=200, 
+            status_code=201 , 
             content={
                     "id": user.id,
                     "name": user.name,
                     "email": user.email,
                     "is_admin": user.is_admin,
             })
+        
+        return response

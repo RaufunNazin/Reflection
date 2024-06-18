@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import api from "../api";
+import Footer from "../components/Footer";
+import { useNavigate, useParams } from "react-router-dom";
 import Rating from "react-rating";
 import { IoMdStar, IoMdStarOutline } from "react-icons/io";
-import Footer from "../components/Footer";
-import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+const Search = () => {
+  const { searchText } = useParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const getProducts = () => {
     api
-      .get("/products")
+      .get(`/products`)
       .then((res) => {
-        setProducts(res.data);
+        const filteredProducts = res.data.filter((product) =>
+          product.name.toLowerCase().includes(searchText.toLowerCase())
+        );
+        setProducts(filteredProducts);
         setLoading(false);
       })
       .catch((err) => {
@@ -26,35 +30,12 @@ const Home = () => {
   useEffect(() => {
     getProducts();
   }, []);
-
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-
-      {/* Hero */}
-      <div className="flex flex-col gap-y-4 md:gap-y-8 md:w-2/3 md:mx-auto my-5 md:my-16 mx-2">
-        <div className="text-[96px] text-center">
-          Uncover the <span className="text-brand">Best Gadgets</span>
-        </div>
-        <div className="text-[24px] text-xlightgray text-center">
-          Streamline your tech journey with authentic insights into the latest
-          gadgets, ensuring best decisions and maximizing your enjoyment of
-          cutting-edge technology
-        </div>
-        <div className="flex justify-center">
-          <button
-            onClick={() => navigate("/recommendations")}
-            className="px-10 py-2 bg-brand rounded-md hover:scale-105 transition-all duration-200 text-white font-semibold"
-          >
-            Get a Recommendation
-          </button>
-        </div>
-      </div>
-
-      {/* Products */}
-      <div className="flex flex-col gap-y-8 md:w-2/3 md:mx-auto my-16">
-        <div className="text-center text-brand text-2xl">
-          Discover Trending Gadgets
+      <div className="flex flex-1 flex-col gap-y-4 md:gap-y-8 md:w-2/3 md:mx-auto my-5 md:my-16 mx-2">
+        <div className="text-center text-brand">
+          Search results for &apos;<strong>{searchText}</strong>&apos;
         </div>
         {products.slice(0, 5).map((product) => (
           <div
@@ -100,19 +81,10 @@ const Home = () => {
             </div>
           </div>
         ))}
-        <div className="flex justify-center">
-          <button
-            onClick={() => navigate("/products")}
-            className="px-10 py-2 bg-brand rounded-md hover:scale-105 transition-all duration-200 text-white font-semibold"
-          >
-            View All Products
-          </button>
-        </div>
       </div>
-
       <Footer />
     </div>
   );
 };
 
-export default Home;
+export default Search;
