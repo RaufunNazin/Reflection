@@ -67,7 +67,7 @@ async def login(request: LoginRequest):
         response.set_cookie('SESSION', session_token)
         return response
 
-@router.get("/auth/me")
+@router.get("/me")
 async def get_profile(user: User = Depends(get_user_from_session)):
     return user
 
