@@ -77,3 +77,19 @@ async def get_product(product_id: int):
     with SessionLocal() as db:
         product = db.query(Product).filter(Product.id == product_id).first()
         return product
+    
+# delete product
+@router.delete("/{product_id}")
+async def delete_product(product_id: int, user: User = Depends(get_user_from_session)):
+    with SessionLocal() as db:
+        # Check if user is admin
+        if not user['is_admin']:
+            return JSONResponse(status_code=403, content={"message": "Unauthorized"})
+        
+        product = db.query(Product).filter(Product.id == product_id).first()
+        if product is None:
+            return JSONResponse(status_code=404, content={"message": "Product not found"})
+        
+        db.delete(product)
+        db.commit()
+        return JSONResponse(status_code=200, content={"message": "Product deleted"})

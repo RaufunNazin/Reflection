@@ -47,14 +47,14 @@ const Search = () => {
                   "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
                 }
                 alt={product.name}
-                className="w-40 h-40 object-contain"
+                className="w-40 h-40 object-cover"
               />
             </div>
             <div className="flex flex-1 flex-col gap-y-2">
               <div className="flex items-center justify-between w-full">
                 <div className="text-[24px] font-semibold">{product.name}</div>
                 <div className="text-[24px] text-brand font-bold">
-                  $ {product.price}
+                  ৳ {product.price}
                 </div>
               </div>
               <div className="text-[18px] text-xlightgray">{product.desc}</div>

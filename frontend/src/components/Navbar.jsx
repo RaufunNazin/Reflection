@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
 
-const Navbar = () => {
+const Navbar = ({active}) => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [searchText, setSearchText] = useState("");
@@ -57,13 +57,13 @@ const Navbar = () => {
         )}
         <button
           onClick={() => navigate("/products")}
-          className="hover:underline hover:underline-offset-2 transition-all duration-200"
+          className={`${active === "products" && "underline underline-offset-2"} hover:underline hover:underline-offset-2 transition-all duration-200`}
         >
           Products
         </button>
         <button
           onClick={() => navigate("/recommendations")}
-          className="hover:underline hover:underline-offset-2 transition-all duration-200"
+          className={`${active === "recommendations" && "underline underline-offset-2"} hover:underline hover:underline-offset-2 transition-all duration-200`}
         >
           Get Recommendations
         </button>

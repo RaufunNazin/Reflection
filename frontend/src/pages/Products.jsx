@@ -6,13 +6,27 @@ import Rating from "react-rating";
 import { IoMdStar, IoMdStarOutline } from "react-icons/io";
 import { Select } from "antd";
 import { useNavigate } from "react-router-dom";
+import { RxCross1 } from "react-icons/rx";
 
 const Products = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState({});
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
+
+  const getProfile = () => {
+    api
+      .get("/auth/me")
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const getCategories = () => {
     api
 
@@ -37,13 +51,26 @@ const Products = () => {
         console.log(err);
       });
   };
+
+  const deleteProduct = (id) => {
+    api
+      .delete(`/products/${id}`)
+      .then(() => {
+        getProducts();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     getProducts();
     getCategories();
+    getProfile();
   }, []);
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar active={"products"} />
       <div className="flex flex-1 flex-col gap-y-4 md:gap-y-8 md:w-2/3 md:mx-auto my-5 md:my-16 mx-2">
         <div className="flex w-full justify-end gap-2">
           <Select
@@ -106,20 +133,27 @@ const Products = () => {
                 key={product.id}
                 className="flex flex-col gap-y-3 shadow-md p-2 bg-white rounded-md transition-all duration-200 hover:shadow-lg"
               >
-                <div>
+                <div className="flex w-full justify-center">
                   <img
                     src={
                       JSON.parse(product.features.replace(/'/g, '"')).image ||
                       "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
                     }
                     alt="product"
-                    className="h-60 object-contain"
+                    className="h-60 w-full object-cover"
                   />
                 </div>
                 <div>
-                  <div className="text-xl font-semibold">{product.name}</div>
+                  <div className="flex items-center justify-between">
+                    <div className="text-xl font-semibold">{product.name}</div>
+                    {user.is_admin === 1 && (
+                      <button onClick={() => deleteProduct(product.id)}>
+                        <RxCross1 />
+                      </button>
+                    )}
+                  </div>
                   <div className="text-md font-semibold text-brand">
-                    ${product.price}
+                    ৳{product.price}
                   </div>
                   <Rating
                     initialRating={product.rating}

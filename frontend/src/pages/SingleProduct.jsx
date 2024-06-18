@@ -145,7 +145,7 @@ const SingleProduct = () => {
               {product.desc}
             </div>
             <div className="text-[24px]  text-center text-brand font-bold">
-              ${product.price}
+            ৳{product.price}
             </div>
           </div>
           <div className="text-center text-brand">Rate this product</div>
@@ -191,7 +191,7 @@ const SingleProduct = () => {
               <div className="flex justify-between">
                 <div className="flex flex-col">
                   <div className="text-lg text-brand font-bold">
-                    {comment.user_id === user.id ? user.name : "Charlie Davis"}
+                    {comment.user_name}
                   </div>
                   <div className="text-lg text-xlightgray">{comment.body}</div>
                 </div>

@@ -59,7 +59,7 @@ const Recommendation = () => {
         pauseOnHover={false}
         theme="colored"
       />
-      <Navbar />
+      <Navbar active={"recommendations"} />
       <div className="flex flex-1 flex-col gap-y-4 md:gap-y-8 md:w-2/3 md:mx-auto my-5 md:my-16 mx-2">
         <div className="text-center text-brand">Fill up the fields below</div>
         <div className="grid grid-cols-5 gap-x-5">
@@ -102,7 +102,7 @@ const Recommendation = () => {
                       "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
                     }
                     alt={product.name}
-                    className="w-40 h-40 object-contain"
+                    className="w-40 h-40 object-cover"
                   />
                 </div>
                 <div className="flex flex-1 flex-col gap-y-2">
@@ -111,7 +111,7 @@ const Recommendation = () => {
                       {product.name}
                     </div>
                     <div className="text-[24px] text-brand font-bold">
-                      $ {product.price}
+                      ৳ {product.price}
                     </div>
                   </div>
                   <div className="text-[18px] text-xlightgray">
@@ -120,11 +120,13 @@ const Recommendation = () => {
                   <div className="grid grid-cols-4">
                     {Object.entries(
                       JSON.parse(product.features.replace(/'/g, '"'))
-                    ).filter(([key]) => key !== "image").map(([key, value]) => (
-                      <li key={key}>
-                        <strong>{key.split("_").join(" ")}:</strong> {value}
-                      </li>
-                    ))}
+                    )
+                      .filter(([key]) => key !== "image")
+                      .map(([key, value]) => (
+                        <li key={key}>
+                          <strong>{key.split("_").join(" ")}:</strong> {value}
+                        </li>
+                      ))}
                   </div>
                   <div className="flex items-center gap-x-2">
                     <Rating

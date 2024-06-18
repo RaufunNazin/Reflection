@@ -10,6 +10,7 @@ import Products from "./pages/Products";
 import SingleProduct from "./pages/SingleProduct";
 import Recommendation from "./pages/Recommendation";
 import Search from "./pages/Search";
+import AdminComments from "./pages/AdminComments";
 
 const App = () => {
   useEffect(() => {
@@ -44,6 +45,7 @@ const App = () => {
             <Route path="/search/:searchText" element={<Search />} />
             <Route path="/product/:productId" element={<SingleProduct />} />
             <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/admin/comments" element={<AdminComments />} />
           </Routes>
         </BrowserRouter>
       </div>

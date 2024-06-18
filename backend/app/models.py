@@ -57,7 +57,7 @@ class Comment(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     rating = Column(String, nullable=False) # JSON - fron - category's rating_params
     body = Column(String, nullable=False)
-    published = Column(Integer, nullable=False, default=1)
+    published = Column(Integer, nullable=False, default=0)
 
     product = relationship("Product", back_populates="comments")
     user = relationship("User", back_populates="comments")

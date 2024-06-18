@@ -25,7 +25,6 @@ class CreateCommentRequest(BaseModel):
 @router.post("/")
 async def create_comment(request: CreateCommentRequest, user: User = Depends(get_user_from_session)):
     with SessionLocal() as db:
-        # Check if user is admin
         if user is None:
             return JSONResponse(status_code=403, content={"message": "Unauthorized"})
         
@@ -80,5 +79,56 @@ async def create_comment(request: CreateCommentRequest, user: User = Depends(get
 @router.get("/{product_id}")
 async def list_comment(product_id: int):
     with SessionLocal() as db:
-        comments = db.query(Comment).filter(Comment.product_id == product_id).all()
+        # get user's name from user_id and add it to the comment object and get all comments of the product which are approved
+        comments = db.query(Comment).filter(Comment.product_id == product_id, Comment.published == 1).all()
+        for comment in comments:
+            user = db.query(User).filter(User.id == comment.user_id).first()
+            comment.user_name = user.name
         return comments
+    
+# get unapproved comments
+@router.get("/unapproved/all")
+async def get_unapproved_comments(user: User = Depends(get_user_from_session)):
+    with SessionLocal() as db:
+        # Check if user is admin
+        if not user['is_admin']:
+            return JSONResponse(status_code=403, content={"message": "Unauthorized"})
+        
+        comments = db.query(Comment).filter(Comment.published == 0).all()
+        return comments
+    
+# approve comment for admin
+@router.put("/{comment_id}")
+async def approve_comment(comment_id: int, user: User = Depends(get_user_from_session)):
+    with SessionLocal() as db:
+        # Check if user is admin
+        if not user['is_admin']:
+            return JSONResponse(status_code=403, content={"message": "Unauthorized"})
+        
+        comment = db.query(Comment).filter(Comment.id == comment_id).first()
+        if comment is None:
+            return JSONResponse(status_code=404, content={"message": "Comment not found"})
+        
+        comment.published = 1
+        db.commit()
+        return comment
+    
+
+# Delete comment
+@router.delete("/{comment_id}")
+async def delete_comment(comment_id: int, user: User = Depends(get_user_from_session)):
+    with SessionLocal() as db:
+        # Check if user is admin
+        if not user['is_admin']:
+            return JSONResponse(status_code=403, content={"message": "Unauthorized"})
+        
+        comment = db.query(Comment).filter(Comment.id == comment_id).first()
+        if comment is None:
+            return JSONResponse(status_code=404, content={"message": "Comment not found"})
+        
+        if user is None or user['id'] != comment.user_id:
+            return JSONResponse(status_code=403, content={"message": "Unauthorized"})
+        
+        db.delete(comment)
+        db.commit()
+        return JSONResponse(status_code=200, content={"message": "Comment deleted"})
